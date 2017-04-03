@@ -8,6 +8,7 @@ Returns finite volume edge mass matrix. Can handle isotropic and anisotropic mod
 
 
 Input:
+
    M::OcTreeMeshFV Octree mesh object
    sigma::vector Conductivity model. Can be used for isotropic and anisotropic models depending on length
           of sigma. For an isotropic model length(sigma) = nc, where nc is the number of mesh cells.
@@ -32,7 +33,7 @@ function getEdgeMassMatrix(M::OcTreeMeshFV,sigma::Vector)
     R12 = kron(sparse([2,1,3],[1,2,3],1),speye(Int,M.nc))
     R23 = kron(sparse([1,3,2],[1,2,3],1),speye(Int,M.nc))
     D   = spdiagm(sigma[       1:3*M.nc])
-    N   = spdiagm(sigma[3*M.nc+1:6*M.nc])
+    N   = Diagonal(sigma[3*M.nc+1:6*M.nc])
     S   = D + R12 * N * R23 + R23 * N * R12
     M   = P' * kron(speye(8),S) * P
    else
